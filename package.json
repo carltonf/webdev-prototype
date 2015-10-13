@@ -1,0 +1,18 @@
+{
+  "name": "myproj",
+  "version": "0.0.1",
+  "description": "My Sample project",
+  "main": "index.js",
+  "private": true,
+  "dependencies": {
+    "express": "^4.13.3",
+    "jquery": "^2.1.4",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Carl Xiong <xiongc05@gmail.com>",
+  "license": "MIT"
+}
