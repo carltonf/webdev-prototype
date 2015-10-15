@@ -1,10 +1,12 @@
 VENDOR_MODULES := jquery underscore
-
+PORT ?= 3000
 APP_SRCS := src/*.js
 TEST_SCRIPT := node_modules/node-skewer/public/skewer.js
-ifeq ($(MAKECMDGOALS),test)
+ifneq ($(MAKECMDGOALS),dist)
 APP_SRCS := ${APP_SRCS} ${TEST_SCRIPT}
 endif
+
+# * Build
 
 bundle: bundle-vendor bundle-app
 bundle-test: bundle
@@ -15,7 +17,6 @@ bundle/vendor.js: ${VENDOR_MODULES:%=node_modules/%}
 	@browserify ${VENDOR_MODULES:%=-r %} -o $@
 
 # TODO optionally we have app modules?
-
 
 bundle-app: bundle/app.js
 bundle/app.js: ${APP_SRCS}
@@ -29,23 +30,39 @@ test: bundle
 # * Watch
 WATCH_BUNDLE_ROOT = $(shell pwd)
 
-# NOTE: broserify may change the atime of the file (if it's changed since last
-# browerifying) so watchman may run twice the command.
+# TODO broserify may change the atime of the source file (if it's changed since
+# last browerifying) so watchman may run twice the command (which leads to some
+# failure log....).
+#
+# NOTE: pass all necessary env to watchman as it would not copy current env.
 define WATCH_BUNDLE_TRIGGER
 ["trigger", "${WATCH_BUNDLE_ROOT}", {
-    "name": "make bundle",
-    "expression": ["allof", [ "dirname", "src" ], ["pcre", "^[^.].+js$$"]], 
-    "command": [ "make", "bundle" ],
+    "name": "make reload",
+    "expression": ["anyof",
+      ["match", "*.html"],
+      ["match", "src/**/*.js", "wholename"]
+    ],
+    "command": [ "make", "reload", "PORT=${PORT}" ],
     "append_files": false
 }]
 endef
 export WATCH_BUNDLE_TRIGGER
+# TODO migrate watch to watch-project
+# TODO currently I only know to visit the log file for log, a little inconvenient.
 watch:
 	@watchman watch $(shell pwd)
 	@echo "$${WATCH_BUNDLE_TRIGGER}" | watchman -j
 
 unwatch:
 	watchman watch-del ${WATCH_BUNDLE_ROOT}
+
+SSE_URL := http://localhost:${PORT}/node-skewer
+reload: bundle
+	@echo "** Reloading..."
+	@curl --silent --show-error "${SSE_URL}/notify?cmd=reload"
+# * Distribution
+dist:
+	@echo "Build distribution package: currently do NOTHING!"
 
 # * Clean
 RM := rm -rfv

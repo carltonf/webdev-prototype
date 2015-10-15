@@ -1,7 +1,7 @@
 var $ = require('jquery');
 
 $(function(){
-  console.log("doing some test both needs 'jquery' anyway.");
+  console.log("From test.js with 'jquery' dependency.");
 });
 
 
