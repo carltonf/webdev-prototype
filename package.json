@@ -9,8 +9,12 @@
     "jquery": "^2.1.4",
     "underscore": "^1.8.3"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "mocha": "^2.3.3",
+    "node-skewer": "carltonf/node-skewer"
+  },
   "scripts": {
+    "start": "node-skewer ./",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Carl Xiong <xiongc05@gmail.com>",
