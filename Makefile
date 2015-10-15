@@ -7,21 +7,21 @@ APP_SRCS := ${APP_SRCS} ${TEST_SCRIPT}
 endif
 
 # * Build
-
+BUNDLE_CMD := browserify --debug
 bundle: bundle-vendor bundle-app
 bundle-test: bundle
 
 bundle-vendor: bundle/vendor.js
 bundle/vendor.js: ${VENDOR_MODULES:%=node_modules/%}
 	@echo "** Bundling all vendor modules..."
-	@browserify ${VENDOR_MODULES:%=-r %} -o $@
+	@${BUNDLE_CMD} ${VENDOR_MODULES:%=-r %} -o $@
 
 # TODO optionally we have app modules?
 
 bundle-app: bundle/app.js
 bundle/app.js: ${APP_SRCS}
 	@echo "** Bundling all app scripts..."
-	browserify $^ ${VENDOR_MODULES:%=-x %} -o $@
+	@${BUNDLE_CMD} $^ ${VENDOR_MODULES:%=-x %} -o $@
 # * Test
 test: bundle
 	@echo ${APP_SRCS}
