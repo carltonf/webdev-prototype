@@ -1,4 +1,4 @@
-VENDOR_MODULES := jquery underscore
+VENDOR_MODULES :=
 PORT ?= 3000
 APP_SRCS := src/*.js
 TEST_SCRIPT := node_modules/node-skewer/public/skewer.js
@@ -7,13 +7,15 @@ APP_SRCS := ${APP_SRCS} ${TEST_SCRIPT}
 endif
 
 # * Build
+DIR_GUARD = @mkdir -pv $(@D)
+
 BUNDLE_CMD := browserify --debug
 bundle: bundle-vendor bundle-app
-bundle-test: bundle
 
 bundle-vendor: bundle/vendor.js
 bundle/vendor.js: ${VENDOR_MODULES:%=node_modules/%}
 	@echo "** Bundling all vendor modules..."
+	${DIR_GUARD}
 	@${BUNDLE_CMD} ${VENDOR_MODULES:%=-r %} -o $@
 
 # TODO optionally we have app modules?
@@ -21,6 +23,7 @@ bundle/vendor.js: ${VENDOR_MODULES:%=node_modules/%}
 bundle-app: bundle/app.js
 bundle/app.js: ${APP_SRCS}
 	@echo "** Bundling all app scripts..."
+	${DIR_GUARD}
 	@${BUNDLE_CMD} $^ ${VENDOR_MODULES:%=-x %} -o $@
 # * Test
 test: bundle
