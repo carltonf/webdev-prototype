@@ -9,3 +9,9 @@ Then execute the following line in the terminal:
 
 You may need to input your project name, which will be your project root
 directory.
+
+* Plan
+
+** TODO Integrate =eslint=
+
+** TODO bundle stylesheets.

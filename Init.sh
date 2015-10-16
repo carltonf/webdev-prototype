@@ -26,7 +26,10 @@ rm -rf ${TMPDIR}
 
 # * Post init
 cd ${prjdir}
+# ** Git
 git init
+git add .
+git commit -am 'init from proto'
 # remove this init script itself.
 rm -f Init.sh
 

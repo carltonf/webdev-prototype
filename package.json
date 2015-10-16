@@ -1,6 +1,6 @@
 {
   "name": "myproj",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "My Sample project",
   "main": "index.js",
   "private": true,
@@ -12,7 +12,7 @@
   },
   "scripts": {
     "start": "node-skewer ./",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "author": "Carl Xiong <xiongc05@gmail.com>",
   "license": "MIT"
