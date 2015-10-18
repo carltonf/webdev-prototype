@@ -4,8 +4,7 @@
   "description": "My Sample project",
   "main": "index.js",
   "private": true,
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "mocha": "^2.3.3",
     "node-skewer": "carltonf/node-skewer"

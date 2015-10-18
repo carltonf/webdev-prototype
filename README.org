@@ -1,6 +1,19 @@
 Web Development Prototype
 ----------------
 
+* Dependencies
+Site-wide/global dependence.
+
+** [[https://github.com/substack/node-browserify][substack/node-browserify]]
+
+: npm install -g browserify
+
+** Sass
+
+The current use in Makefile is =SassC=.
+
+Another option is [[https://github.com/sass/node-sass][sass/node-sass]].
+
 * Usage
 In the directory you'd like to create your new web project.
 

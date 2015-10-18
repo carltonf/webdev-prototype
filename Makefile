@@ -6,17 +6,19 @@ ifneq ($(MAKECMDGOALS),dist)
 APP_SRCS := ${APP_SRCS} ${TEST_SCRIPT}
 endif
 
-# * Build
 DIR_GUARD = @mkdir -pv $(@D)
 
-BUNDLE_CMD := browserify --debug
+CSS_BUNDLE_CMD := sassc --sourcemap
+JS_BUNDLE_CMD := browserify --debug
+
+# * Build
 bundle: bundle-vendor bundle-app
 
 bundle-vendor: bundle/vendor.js
 bundle/vendor.js: ${VENDOR_MODULES:%=node_modules/%}
 	@echo "** Bundling all vendor modules..."
 	${DIR_GUARD}
-	@${BUNDLE_CMD} ${VENDOR_MODULES:%=-r %} -o $@
+	@${JS_BUNDLE_CMD} ${VENDOR_MODULES:%=-r %} -o $@
 
 # TODO optionally we have app modules?
 
@@ -24,11 +26,32 @@ bundle-app: bundle/app.js
 bundle/app.js: ${APP_SRCS}
 	@echo "** Bundling all app scripts..."
 	${DIR_GUARD}
-	@${BUNDLE_CMD} $^ ${VENDOR_MODULES:%=-x %} -o $@
+	@${JS_BUNDLE_CMD} $^ ${VENDOR_MODULES:%=-x %} -o $@
 # * Test
-test: bundle
-	@echo ${APP_SRCS}
-	@npm test
+# reload to make sure the page is clear; sleep to make sure the SSE is established.
+# TODO The time to wait feels hacky
+test: reload test-bundle
+	@sleep 1;
+	@curl --silent --show-error						\
+	  "${SSE_URL}/notify?cmd=loadScript&data=tools/test/init.js"
+
+
+test-bundle: test-bundle-css test-bundle-js
+
+test-bundle-css: bundle/test.css
+test-bundle-js: bundle/test.js
+
+TEST_PAGE_CSS_SRCS := tools/test/*.*css
+bundle/test.css: ${TEST_PAGE_CSS_SRCS}
+	@echo "** Bundling test page stylesheets..."
+	${DIR_GUARD}
+	@${CSS_BUNDLE_CMD} $< $@
+
+TEST_PAGE_JS_SRCS := test/*.js
+bundle/test.js: ${TEST_PAGE_JS_SRCS}
+	@echo "** Bundling all test scripts..."
+	${DIR_GUARD}
+	@${JS_BUNDLE_CMD} $^ -o $@
 
 # * Watch
 WATCH_BUNDLE_ROOT = $(shell pwd)
