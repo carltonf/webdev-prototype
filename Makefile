@@ -68,7 +68,8 @@ define WATCH_BUNDLE_TRIGGER
     "name": "make reload",
     "expression": ["anyof",
       ["match", "*.html"],
-      ["match", "src/**/*.js", "wholename"]
+      ["match", "src/**/*.js", "wholename"],
+      ["match", "src/**/*.*css", "wholename"]
     ],
     "command": [ "make", "reload", "PORT=${PORT}" ],
     "append_files": false
