@@ -6,6 +6,8 @@ ifneq ($(MAKECMDGOALS),dist)
 APP_SRCS := ${APP_SRCS} ${TEST_SCRIPT}
 endif
 
+.DELETE_ON_ERROR:
+
 DIR_GUARD = @mkdir -pv $(@D)
 
 CSS_BUNDLE_CMD := sassc --sourcemap
