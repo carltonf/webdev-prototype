@@ -1,4 +1,6 @@
 VENDOR_MODULES :=
+NODE_INTERNAL_MODULES :=
+EXT_MODULES := ${VENDOR_MODULES} ${NODE_INTERNAL_MODULES}
 PORT ?= 3000
 APP_SRCS := src/*.js
 TEST_SCRIPT := node_modules/node-skewer/public/skewer.js
@@ -17,10 +19,12 @@ JS_BUNDLE_CMD := browserify --debug
 bundle: bundle-vendor bundle-app
 
 bundle-vendor: bundle/vendor.js
+# list the node_module directories to rebuild the vendor bundle when these get
+# updated.
 bundle/vendor.js: ${VENDOR_MODULES:%=node_modules/%}
 	@echo "** Bundling all vendor modules..."
 	${DIR_GUARD}
-	@${JS_BUNDLE_CMD} ${VENDOR_MODULES:%=-r %} -o $@
+	@${JS_BUNDLE_CMD} ${EXT_MODULES:%=-r %} -o $@
 
 # TODO optionally we have app modules?
 
@@ -28,7 +32,7 @@ bundle-app: bundle/app.js
 bundle/app.js: ${APP_SRCS}
 	@echo "** Bundling all app scripts..."
 	${DIR_GUARD}
-	@${JS_BUNDLE_CMD} $^ ${VENDOR_MODULES:%=-x %} -o $@
+	@${JS_BUNDLE_CMD} $^ ${EXT_MODULES:%=-x %} -o $@
 # * Test
 # reload to make sure the page is clear; sleep to make sure the SSE is established.
 # TODO The time to wait feels hacky
