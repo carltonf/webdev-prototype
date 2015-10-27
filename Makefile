@@ -2,11 +2,15 @@ VENDOR_MODULES :=
 NODE_INTERNAL_MODULES :=
 EXT_MODULES := ${VENDOR_MODULES} ${NODE_INTERNAL_MODULES}
 PORT ?= 3000
-APP_SRCS := src/*.js
+APP_ENTRY := src/main.js
+APP_SRCS := $(wildcard src/*.js)
 TEST_SCRIPT := node_modules/node-skewer/public/skewer.js
 ifneq ($(MAKECMDGOALS),dist)
-APP_SRCS := ${APP_SRCS} ${TEST_SCRIPT}
+APP_ENTRY := ${APP_ENTRY} ${TEST_SCRIPT}
 endif
+
+APP_STYLE_ENTRY := src/main.scss
+APP_STYLE_SRCS := $(wildcard src/*.css src/*.scss)
 
 .DELETE_ON_ERROR:
 
@@ -28,11 +32,16 @@ bundle/vendor.js: ${VENDOR_MODULES:%=node_modules/%}
 
 # TODO optionally we have app modules?
 
-bundle-app: bundle/app.js
+bundle-app: bundle/app.js bundle/app.css
 bundle/app.js: ${APP_SRCS}
 	@echo "** Bundling all app scripts..."
 	${DIR_GUARD}
-	@${JS_BUNDLE_CMD} $^ ${EXT_MODULES:%=-x %} -o $@
+	@${JS_BUNDLE_CMD} ${APP_ENTRY} ${EXT_MODULES:%=-x %} -o $@
+bundle/app.css: ${APP_STYLE_SRCS}
+	@echo "** Bundling all app styles..."
+	@${DIR_GUARD}
+	@${CSS_BUNDLE_CMD} ${APP_STYLE_ENTRY} $@
+
 # * Test
 # reload to make sure the page is clear; sleep to make sure the SSE is established.
 # TODO The time to wait feels hacky
