@@ -6,7 +6,25 @@ Site-wide/global dependence.
 
 ** [[https://github.com/substack/node-browserify][substack/node-browserify]]
 
-: npm install -g browserify
+For bundling JavaScript modules in a CommonJS way.
+
+** [[https://github.com/mishoo/UglifyJS2][mishoo/UglifyJS2]]
+
+For JavaScript file compression.
+
+** [[https://facebook.github.io/watchman/][Watchman | A file watching service]]
+
+Used for watching file changes to recompile, reload and etc.
+
+*WARNING:* for now, =watchman= feels like a tool to run behind the scene, this
+makes it inconvenient to look for errors. A workaround is to read the watchman
+log file.
+
+- find the log file location
+  : watchman get-sockname
+  The "log" file is usually within the same directory.
+- follow the log
+  : tail -f <path-to-watchman-log-file>
 
 ** Sass
 
@@ -27,4 +45,6 @@ directory.
 
 ** TODO Integrate =eslint=
 
-** TODO bundle stylesheets.
+** TODO Modularize Makefile
+It's growing a bit too large. Should be separated in a fashion similar to
+Android Build system.
