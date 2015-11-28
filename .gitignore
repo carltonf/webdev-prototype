@@ -1,6 +1,7 @@
 # Generated
 bundle/
 dist/
+npm-debug.log*
 
 # vendor modules
 node_modules/
@@ -16,3 +17,6 @@ bower_components/
 *~
 \#*\#
 npm-debug.log
+
+# Webstorm
+.idea/
