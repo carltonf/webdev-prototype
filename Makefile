@@ -30,6 +30,7 @@ CSS_BUNDLE_CMD := ${CSS_BUNDLE_CMD} --style compressed
 JS_COMPRESS_CMD := | uglifyjs - --compress
 endif
 
+.DEFAULT_GOAL := bundle
 
 # * Build
 bundle: bundle-vendor bundle-app
