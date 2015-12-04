@@ -1,0 +1,8 @@
+CSS_BUNDLE_CMD := sassc
+
+ifneq ($(MAKECMDGOALS),dist)
+CSS_BUNDLE_CMD := ${CSS_BUNDLE_CMD} --sourcemap
+# dist flags
+else
+CSS_BUNDLE_CMD := ${CSS_BUNDLE_CMD} --style compressed
+endif

@@ -1,33 +1,30 @@
-VENDOR_MODULES :=
-NODE_INTERNAL_MODULES :=
+include tools/build/Makefile-utils.am
+include tools/build/Makefile-js.am
+include tools/build/Makefile-scss.am
+
+# TODO a Makefile function to include sub-am files automatically
+include src/scripts/Makefile.am
+include src/styles/Makefile.am
+
+
+include ./Makefile.am
+
 EXT_MODULES := ${VENDOR_MODULES} ${NODE_INTERNAL_MODULES}
+
 PORT ?= 3000
-APP_ENTRY := src/main.js
-APP_SRCS := $(wildcard src/*.js)
-TEST_SCRIPT := node_modules/node-skewer/public/skewer.js
-APP_STYLE_ENTRY := src/main.scss
-APP_STYLE_SRCS := $(wildcard src/*.css src/*.scss)
+
+DEV_HELPER := node_modules/node-skewer/public/skewer.js
+
+
 
 DIST_SRCS := index.html bundle/
 
-.DELETE_ON_ERROR:
-
-DIR_GUARD = @mkdir -pv $(@D)
-
-
-CSS_BUNDLE_CMD := sassc
-JS_BUNDLE_CMD := browserify
-JS_COMPRESS_CMD :=
 
 # * Dist flags setup
 ifneq ($(MAKECMDGOALS),dist)
-APP_ENTRY := ${APP_ENTRY} ${TEST_SCRIPT}
-CSS_BUNDLE_CMD := ${CSS_BUNDLE_CMD} --sourcemap
-JS_BUNDLE_CMD := ${JS_BUNDLE_CMD}  --debug
+APP_ENTRY := ${APP_ENTRY} ${DEV_HELPER}
 # dist flags
 else
-CSS_BUNDLE_CMD := ${CSS_BUNDLE_CMD} --style compressed
-JS_COMPRESS_CMD := | uglifyjs - --compress
 endif
 
 .DEFAULT_GOAL := bundle

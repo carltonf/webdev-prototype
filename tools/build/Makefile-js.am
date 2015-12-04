@@ -1,0 +1,10 @@
+# TODO separate into two AM files?
+
+JS_BUNDLE_CMD := browserify
+JS_COMPRESS_CMD :=
+
+ifneq ($(MAKECMDGOALS),dist)
+JS_BUNDLE_CMD := ${JS_BUNDLE_CMD}  --debug
+else
+JS_COMPRESS_CMD := | uglifyjs - --compress
+endif

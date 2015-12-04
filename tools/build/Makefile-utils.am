@@ -1,0 +1,3 @@
+.DELETE_ON_ERROR:
+
+DIR_GUARD = @mkdir -pv $(@D)
